@@ -85,7 +85,8 @@ export default function Header() {
       </List>
       
       <Box sx={{ p: 2, textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-        <Typography variant="body2" color="rgba(255,255,255,0.7)">
+      <WalletButton />
+        <Typography variant="body2" mt={2} color="rgba(255,255,255,0.7)">
           © 2023 Whatthefchain
         </Typography>
       </Box>
@@ -123,7 +124,9 @@ export default function Header() {
                 <Button href="/trade" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>TRADE</Button>
                 <Button href="/explore" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>EXPLORE</Button>
                 <Button href="/pool" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>POOL</Button>
+                <WalletButton />
               </Box>
+              
             )}
 
             {/* منوی همبرگری - نسخه موبایل */}
@@ -137,9 +140,8 @@ export default function Header() {
               >
                 <MenuIcon />
               </IconButton>
-            )}
+            )} {/* Replaced ss with WalletButton */}
           </Box>
-          <WalletButton /> {/* Replaced ss with WalletButton */}
         </Toolbar>
       </AppBar>
 
