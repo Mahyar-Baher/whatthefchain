@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: 
+    /* Image 1: Top-left */
+    url('./assets/wtfc/fade_pizza.png') no-repeat 5% 5% / 250px 250px,
+    /* Image 2: Top-right */
+    url('./assets/wtfc/fade_pizza.png') no-repeat 95% 5% / 300px 300px,
+    /* Image 3: Bottom-left */
+    url('./assets/wtfc/fade_pizza.png') no-repeat 5% 95% / 300px 300px,
+    /* Image 4: Bottom-right */
+    url('./assets/wtfc/fade_pizza.png') no-repeat 95% 95% / 350px 350px,
+    /* Image 5: Center-left */
+    url('./assets/wtfc/fade_pizza.png') no-repeat 50% 50% / 200px 200px,
+    /* Existing gradient */
+    linear-gradient(123deg, rgba(112, 0, 224, 1) 0%, rgba(48, 0, 96, 1) 33%, rgba(0, 0, 0, 1) 100%);
+  min-height: 100vh;
+  margin: 0;
+  background-attachment: fixed;
+  background-blend-mode: overlay;
+}
+
+@media (max-width: 600px) {
+  body {
+    background: 
+      /* Image 1: Top-left, smaller */
+      url('./assets/wtfc/fade_pizza.png') no-repeat 5% 5% / 150px 150px,
+      /* Image 2: Top-right, smaller */
+      url('./assets/wtfc/fade_pizza.png') no-repeat 95% 5% / 150px 150px,
+      /* Image 3: Bottom-left, smaller */
+      url('./assets/wtfc/fade_pizza.png') no-repeat 5% 95% / 150px 150px,
+      /* Image 4: Bottom-right, smaller */
+      url('./assets/wtfc/fade_pizza.png') no-repeat 95% 95% / 150px 150px,
+      /* Hide Image 5 on mobile to avoid clutter */
+      linear-gradient(123deg, rgba(112, 0, 224, 1) 0%, rgba(48, 0, 96, 1) 33%, rgba(0, 0, 0, 1) 100%);
+    background-attachment: scroll; /* Better compatibility on mobile */
+  }
+}
+@keyframes bellShake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
