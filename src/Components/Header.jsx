@@ -124,7 +124,6 @@ export default function Header() {
                 <Button href="/trade" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>TRADE</Button>
                 <Button href="/explore" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>EXPLORE</Button>
                 <Button href="/pool" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>POOL</Button>
-                <WalletButton />
               </Box>
               
             )}
@@ -142,6 +141,11 @@ export default function Header() {
               </IconButton>
             )} {/* Replaced ss with WalletButton */}
           </Box>
+          {!isMobile && (
+            <Box >
+              <WalletButton />
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
 
