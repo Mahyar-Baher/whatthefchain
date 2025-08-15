@@ -286,6 +286,7 @@ const WalletButton = () => {
                 key={wallet.id}
                 onClick={() => handleWalletSelect(wallet)}
                 sx={{
+                  cursor: 'pointer',
                   borderRadius: '8px',
                   mb: 1,
                   transition: 'background-color 0.2s ease',

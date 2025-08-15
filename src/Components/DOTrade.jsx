@@ -476,7 +476,8 @@ const DOTrade = () => {
       alignItems="center"
       height={350}
       gap={0}
-      pr={5}
+      pr={{xs:3, md:5}}
+      pl={{xs:3,md:0}}
       borderRadius={2}
       sx={{ overscrollBehavior: 'contain', position: 'relative' }}
     >
@@ -700,6 +701,7 @@ const DOTrade = () => {
                               width: 40,
                               height: 40,
                               animation: `${slotSpin} 0.4s ease-in-out`,
+                              background: 'transparent',
                               '&:hover': {
                                 boxShadow: '0 0 12px rgba(112, 0, 224, 0.5)',
                               },

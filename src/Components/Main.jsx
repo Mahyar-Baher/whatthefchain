@@ -7,7 +7,7 @@ import BitcoinPriceComparison from './OldPriceNew'
 
 const Main = () => {
   return (
-    <Grid container spacing={2} justifyContent='space-between'>
+    <Grid container spacing={2} justifyContent='space-between' >
         <Grid size={{xs:12}}>
             <BellAlert/>
         </Grid>
@@ -17,7 +17,7 @@ const Main = () => {
         <Grid size={{xs:12,sm:6,md:6,lg:5}}>
             <DOTrade/>
         </Grid>
-        <Grid size={{xs:12,md: 6}}>
+        <Grid size={{xs:12,md: 5}} display={{xs:'flex',md:'none'}}>
             <BitcoinPriceComparison/>
         </Grid>
     </Grid>

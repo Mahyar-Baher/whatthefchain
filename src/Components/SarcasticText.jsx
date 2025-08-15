@@ -111,7 +111,7 @@ export default function SarcasticText() {
           sx={{
             position: 'relative',
             width: '100%',
-            px: 5,
+            px: 0,
             minHeight: { xs: 200, md: 320 },
             maxHeight: { xs: 200, md: 320 },
             display: 'flex',
