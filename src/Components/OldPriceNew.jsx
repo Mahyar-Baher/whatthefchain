@@ -81,7 +81,7 @@ const BitcoinPriceComparison = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        p: isMobile ? 2 : 3,
+        p: isMobile ? 2 : 1,
         borderRadius: 2,
         background: 'transparent',
         width: '100%',
@@ -97,7 +97,7 @@ const BitcoinPriceComparison = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          mb: isMobile ? 1 : 2,
+          mb: isMobile ? 1 : 0,
           zIndex: 1,
           width: '100%',
           textAlign: 'center',
@@ -215,7 +215,7 @@ const BitcoinPriceComparison = () => {
             width: '100%',
             position: 'relative',
             zIndex: 1,
-            mt: 1,
+            mt: 0,
           }}
         >
           {/* Historical Price - 2010 */}
@@ -296,11 +296,11 @@ const BitcoinPriceComparison = () => {
 
       <Box
         sx={{
-          mt: 3,
+          mt: 1,
           width: '100%',
           background: 'rgba(255, 255, 255, 0.05)',
           borderRadius: 1,
-          p: isMobile ? 1.5 : 2,
+          p: isMobile ? 1.5 : 1,
           textAlign: 'center',
           zIndex: 1,
           border: '1px solid rgba(255,255,255,0.1)',

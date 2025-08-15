@@ -17,7 +17,7 @@ const Main = () => {
         <Grid size={{xs:12,sm:6,md:6,lg:5}}>
             <DOTrade/>
         </Grid>
-        <Grid size={{xs:12}}>
+        <Grid size={{xs:12,md: 6}}>
             <BitcoinPriceComparison/>
         </Grid>
     </Grid>

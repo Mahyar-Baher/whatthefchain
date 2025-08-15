@@ -3,25 +3,56 @@ import {
   AppBar, Toolbar, Typography, Box, Button, IconButton, 
   Drawer, List, ListItem, ListItemText, Divider, useMediaQuery
 } from '@mui/material';
-import {useTheme} from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { styled, keyframes } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import liveImg from '../assets/wtfc/pizza.png';
-import WalletButton from './WalletButton'; // Import the new component
+import WalletButton from './WalletButton';
 
+// Animations
 const float = keyframes`
   0% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  50% { transform: translateY(-4px); }
   100% { transform: translateY(0); }
 `;
 
-const LiveIcon = styled('img')({
+const pizzaSpin = keyframes`
+  0% {
+    transform: scale(1) rotate(0);
+    filter: drop-shadow(0 0 0 rgba(112, 0, 224, 0.8));
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    filter: drop-shadow(0 0 8px rgba(112, 0, 224, 1));
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 3px rgba(112, 0, 224, 0.6));
+  }
+`;
+
+const LiveIconContainer = styled('div')(({ theme }) => ({
+  display: 'inline-block',
+  marginLeft: 0,
+  '&:hover img': {
+    animation: `${pizzaSpin} 0.6s ease-out both`,
+  },
+  [theme.breakpoints.down('md')]: {
+    '&:active img': {
+      animation: `${pizzaSpin} 0.6s ease-out both`,
+    }
+  }
+}));
+
+const LiveIconImg = styled('img')(() => ({
   width: 40,
   height: 40,
-  marginLeft: 0,
-  animation: `${float} 1s infinite ease-in-out`
-});
+  animation: `${float} 2.5s infinite ease-in-out`,
+  transition: 'all 0.3s',
+  cursor: 'pointer',
+  transformOrigin: 'center',
+}));
 
 export default function Header() {
   const theme = useTheme();
@@ -32,7 +63,7 @@ export default function Header() {
     setMobileOpen(!mobileOpen);
   };
 
-  // محتوای منوی موبایل
+  // Mobile drawer content
   const drawer = (
     <Box sx={{ 
       width: 250, 
@@ -51,7 +82,9 @@ export default function Header() {
           <Button href='/' sx={{ fontWeight: 900, color: 'seashell', fontSize: 20 }} variant='text'>
             Whatthefchain
           </Button>
-          <LiveIcon src={liveImg} alt="Live Icon" />
+          <LiveIconContainer>
+            <LiveIconImg src={liveImg} alt="Live Icon" />
+          </LiveIconContainer>
         </Box>
         <IconButton onClick={handleDrawerToggle} sx={{ color: 'seashell' }}>
           <CloseIcon />
@@ -85,7 +118,7 @@ export default function Header() {
       </List>
       
       <Box sx={{ p: 2, textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-      <WalletButton />
+        <WalletButton />
         <Typography variant="body2" mt={2} color="rgba(255,255,255,0.7)">
           © 2023 Whatthefchain
         </Typography>
@@ -95,40 +128,41 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="static" color="transparent" elevation={0} sx={{ backdropFilter: 'blur(10px)',px:{xs:1, md:0} }}>
+      <AppBar position="static" color="transparent" elevation={0} sx={{ backdropFilter: 'blur(10px)', px: { xs: 1, md: 0 } }}>
         <Toolbar sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            gap:2,
-            paddingX: isMobile ? 1 : 3 
-          }}>
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          gap: 2,
+          paddingX: isMobile ? 1 : 3 
+        }}>
           <Box sx={{ 
             display: 'flex', 
-            justifyContent: {xs:'space-between',md: 'flex-start'}, 
+            justifyContent: { xs: 'space-between', md: 'flex-start' }, 
             alignItems: 'center',
-            gap:2,
+            gap: 2,
             paddingX: isMobile ? 1 : 3 
           }}>
-              {/* لوگو و تصاویر */}
+            {/* Logo and images */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Button href='/' sx={{ fontWeight: 900, color:'seashell', fontSize: isMobile ? 16 : 20 }} variant='text'>
+              <Button href='/' sx={{ fontWeight: 900, color: 'seashell', fontSize: isMobile ? 16 : 20 }} variant='text'>
                 Whatthefchain
               </Button>
-              <LiveIcon src={liveImg} alt="Live Icon" />
+              <LiveIconContainer>
+                <LiveIconImg src={liveImg} alt="Live Icon" />
+              </LiveIconContainer>
             </Box>
 
-            {/* دکمه‌ها - نسخه دسکتاپ */}
+            {/* Desktop buttons */}
             {!isMobile && (
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button href="/trade" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>TRADE</Button>
-                <Button href="/explore" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>EXPLORE</Button>
-                <Button href="/pool" variant="text" sx={{color: 'seashell', fontSize: 15, fontWeight: 600}}>POOL</Button>
+                <Button href="/trade" variant="text" sx={{ color: 'seashell', fontSize: 15, fontWeight: 600 }}>TRADE</Button>
+                <Button href="/explore" variant="text" sx={{ color: 'seashell', fontSize: 15, fontWeight: 600 }}>EXPLORE</Button>
+                <Button href="/pool" variant="text" sx={{ color: 'seashell', fontSize: 15, fontWeight: 600 }}>POOL</Button>
               </Box>
-              
             )}
 
-            {/* منوی همبرگری - نسخه موبایل */}
+            {/* Mobile hamburger menu */}
             {isMobile && (
               <IconButton
                 color="inherit"
@@ -139,24 +173,24 @@ export default function Header() {
               >
                 <MenuIcon />
               </IconButton>
-            )} {/* Replaced ss with WalletButton */}
+            )}
           </Box>
           {!isMobile && (
-            <Box >
+            <Box>
               <WalletButton />
             </Box>
           )}
         </Toolbar>
       </AppBar>
 
-      {/* Drawer برای نسخه موبایل */}
+      {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile
+          keepMounted: true,
         }}
         sx={{
           '& .MuiDrawer-paper': { 
