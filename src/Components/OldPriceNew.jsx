@@ -274,12 +274,12 @@ const PriceBox = ({ year, price, position, current = false, subtitle, animation,
         <Typography
           variant="h4"
           sx={{
-            fontWeight: current ? 500 : 700,
-            fontSize: current ? (isMobile ? '1.8rem' : '2.2rem') : isMobile ? '1.5rem' : '1.8rem',
+            fontWeight: current ? 700 : 700,
+            fontSize: current ? (isMobile ? '2.2rem' : '2.2rem') : isMobile ? '1.5rem' : '1.5rem',
             color: 'rgba(255,255,255,0.95)',
             lineHeight: 1,
             mb: 0.5,
-            letterSpacing: current ? '0.5px' : '0px',
+            letterSpacing: current ? '0px' : '0px',
           }}
         >
           {price}

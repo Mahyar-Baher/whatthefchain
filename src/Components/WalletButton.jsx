@@ -20,7 +20,7 @@ import {
 import { useTheme, keyframes } from '@mui/material/styles';
 import WalletIcon from '@mui/icons-material/Wallet';
 import useWalletStore from '../stores/walletStore';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { Icon } from '@iconify/react';
 
 // انیمیشن‌ها
 const pulse = keyframes`
@@ -29,20 +29,16 @@ const pulse = keyframes`
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(112, 0, 224, 0); }
 `;
 
-// آیکون‌های کیف پول‌ها (موقت - در عمل باید آیکون‌های واقعی استفاده شوند)
+// آیکون‌های کیف پول‌ها
 const MetaMaskIcon = () => (
   <Box sx={{ 
     width: 24, 
     height: 24, 
-    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12
   }}>
-    <Icon icon="logos:metamask-icon" width="256" height="240" />
+    <Icon icon="logos:metamask-icon" width="24" height="24" />
   </Box>
 );
 
@@ -50,14 +46,9 @@ const CoinbaseIcon = () => (
   <Box sx={{ 
     width: 24, 
     height: 24, 
-    bgcolor: '#1652F0', 
-    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12
   }}>
     <Icon icon="token-branded:coinbase" width="24" height="24" />
   </Box>
@@ -67,14 +58,9 @@ const BinanceIcon = () => (
   <Box sx={{ 
     width: 24, 
     height: 24, 
-    bgcolor: '#000', 
-    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12
   }}>
     <Icon icon="token-branded:binance" width="24" height="24" />
   </Box>
@@ -83,7 +69,7 @@ const BinanceIcon = () => (
 const WalletButton = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { address, isConnected, walletType, connect, disconnect } = useWalletStore();
+  const { address, isConnected, walletType, balance, chainUnit, chainId, networkName, ensName, connect, disconnect } = useWalletStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pulseAnimation, setPulseAnimation] = useState(false);
@@ -124,11 +110,11 @@ const WalletButton = () => {
     }
   }, [isConnected]);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (isConnected) {
-      disconnect();
+      setPopoverOpen(true); // نمایش اطلاعات والت
     } else {
-      setPopoverOpen(true);
+      setPopoverOpen(true); // نمایش گزینه‌های اتصال
     }
   };
 
@@ -140,12 +126,17 @@ const WalletButton = () => {
     setLoading(true);
     try {
       await connect(wallet.id);
-      setPopoverOpen(false);
+      setPopoverOpen(true); // بعد از اتصال، اطلاعات والت نمایش داده شود
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
+    setPopoverOpen(false);
   };
 
   const handlePopoverClose = () => {
@@ -161,6 +152,7 @@ const WalletButton = () => {
   };
 
   const shortenedAddress = address ? `${address.slice(0, 4)}...${address.slice(-3)}` : '';
+  const shortenedBalance = balance ? parseFloat(balance).toFixed(4) : '0';
   const walletName = walletType ? wallets.find(w => w.id === walletType)?.name || 'Wallet' : 'Wallet';
 
   // محاسبه اندازه‌ها بر اساس موبایل بودن
@@ -176,7 +168,7 @@ const WalletButton = () => {
         sx={{ display: 'inline-block' }}
       >
         <Tooltip 
-          title={isConnected ? `Connected: ${shortenedAddress} (${walletName})` : 'Connect Wallet'} 
+          title={isConnected ? `Connected: ${ensName || shortenedAddress} (${walletName})` : 'Connect Wallet'} 
           placement="bottom"
           arrow
         >
@@ -236,7 +228,7 @@ const WalletButton = () => {
         </Tooltip>
       </Box>
 
-      {/* Popover for wallet selection */}
+      {/* Popover for wallet selection or info */}
       <Popover
         open={popoverOpen}
         anchorEl={anchorRef.current}
@@ -257,7 +249,7 @@ const WalletButton = () => {
             borderRadius: '12px',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             boxShadow: '0 12px 32px rgba(0, 0, 0, 0.5)',
-            width: 280,
+            width: isMobile ? 240 : 280,
             overflow: 'hidden',
             transition: 'opacity 0.2s ease-in-out',
           },
@@ -267,63 +259,113 @@ const WalletButton = () => {
         disableRestoreFocus
       >
         <Box sx={{ p: 2 }}>
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              fontWeight: 600, 
-              color: 'rgba(255, 255, 255, 0.9)',
-              textAlign: 'center',
-              mb: 1
-            }}
-          >
-            Connect a wallet
-          </Typography>
-          
-          <List dense sx={{ py: 0 }}>
-            {wallets.map((wallet) => (
-              <ListItem
-                button
-                key={wallet.id}
-                onClick={() => handleWalletSelect(wallet)}
+          {isConnected ? (
+            <>
+              <Typography 
+                variant="subtitle1" 
+                sx={{ 
+                  fontWeight: 600, 
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  textAlign: 'center',
+                  mb: 2
+                }}
+              >
+                Wallet Info
+              </Typography>
+              <Box sx={{ mb: 2 }}>
+                <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: isMobile ? 14 : 16 }}>
+                  Wallet: {walletName}
+                </Typography>
+                <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: isMobile ? 14 : 16 }}>
+                  {ensName ? 'ENS Name' : 'Address'}: {ensName || shortenedAddress}
+                </Typography>
+                <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: isMobile ? 14 : 16 }}>
+                  Balance: {shortenedBalance} {chainUnit}
+                </Typography>
+                <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: isMobile ? 14 : 16 }}>
+                  Network: {networkName}
+                </Typography>
+                <Typography sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: isMobile ? 14 : 16 }}>
+                  Chain ID: {chainId}
+                </Typography>
+              </Box>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={handleDisconnect}
                 sx={{
-                  cursor: 'pointer',
-                  borderRadius: '8px',
-                  mb: 1,
-                  transition: 'background-color 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  color: 'white',
+                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  borderRadius: 2,
+                  '&:hover': { 
+                    background: 'rgba(255, 255, 255, 0.1)', 
+                    borderColor: 'rgba(255, 255, 255, 0.5)' 
                   },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {wallet.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography sx={{ fontWeight: 500, color: 'rgba(255, 255, 255, 0.85)' }}>
-                      {wallet.name}
-                    </Typography>
-                  }
-                />
-                {wallet.detected && (
-                  <Typography 
-                    variant="caption" 
+                Disconnect
+              </Button>
+            </>
+          ) : (
+            <>
+              <Typography 
+                variant="subtitle1" 
+                sx={{ 
+                  fontWeight: 600, 
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  textAlign: 'center',
+                  mb: 1
+                }}
+              >
+                Connect a wallet
+              </Typography>
+              <List dense sx={{ py: 0 }}>
+                {wallets.map((wallet) => (
+                  <ListItem
+                    button
+                    key={wallet.id}
+                    onClick={() => handleWalletSelect(wallet)}
                     sx={{
-                      bgcolor: 'rgba(76, 175, 80, 0.15)',
-                      color: '#4CAF50',
-                      px: 1,
-                      py: 0.3,
-                      borderRadius: '4px',
-                      fontSize: '0.65rem',
-                      fontWeight: 600,
+                      cursor: 'pointer',
+                      borderRadius: '8px',
+                      mb: 1,
+                      transition: 'background-color 0.2s ease',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      },
                     }}
                   >
-                    Detected
-                  </Typography>
-                )}
-              </ListItem>
-            ))}
-          </List>
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      {wallet.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography sx={{ fontWeight: 500, color: 'rgba(255, 255, 255, 0.85)' }}>
+                          {wallet.name}
+                        </Typography>
+                      }
+                    />
+                    {wallet.detected && (
+                      <Typography 
+                        variant="caption" 
+                        sx={{
+                          bgcolor: 'rgba(76, 175, 80, 0.15)',
+                          color: '#4CAF50',
+                          px: 1,
+                          py: 0.3,
+                          borderRadius: '4px',
+                          fontSize: '0.65rem',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Detected
+                      </Typography>
+                    )}
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          )}
         </Box>
         
         <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)' }} />

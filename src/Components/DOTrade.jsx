@@ -23,6 +23,7 @@ import TokenSelector from './TokenSelector';
 import { Icon } from '@iconify/react';
 import { getIconifyName } from './iconifyHelpers';
 import useWalletStore from '../stores/walletStore';
+import Magnet from './Magnet';
 
 // Game-like slot machine animation
 const slotSpin = keyframes`
@@ -296,25 +297,25 @@ const DOTrade = () => {
   // Button text based on USD value
   const getButtonText = () => {
     const v = Number(usdValue) || 0;
-    if (v === 0) return 'DO  🚀 IT';
-    if (v < 1) return 'D🫠 IT';
-    if (v < 10) return 'D🥲 IT';
-    if (v < 100) return 'D😬 IT';
-    if (v < 500) return 'D😏 IT';
-    if (v < 1000) return 'D😎 IT';
-    if (v < 5000) return 'D🤡 IT';
-    if (v < 10000) return 'D🤩 IT';
-    if (v < 25000) return 'D🤑 IT';
-    if (v < 50000) return 'D🤯 IT';
-    if (v < 100000) return 'D💰 IT';
-    if (v < 300000) return 'D🧨💸 IT';
+    if (v === 0) return 'B🫡y IT';
+    if (v < 1) return 'B🫠y IT';
+    if (v < 10) return 'B🥲y IT';
+    if (v < 100) return 'B😬y IT';
+    if (v < 500) return 'B😏y IT';
+    if (v < 1000) return 'B😎y IT';
+    if (v < 5000) return 'B🤡y IT';
+    if (v < 10000) return 'B🤩y IT';
+    if (v < 25000) return 'B🤑y IT';
+    if (v < 50000) return 'B🤯y IT';
+    if (v < 100000) return 'B💰y IT';
+    if (v < 300000) return 'B🧨💸 IT';
     if (v < 1000000) {
       const extra = Math.min(6, Math.floor(v / 100000));
       return `D🤣 ${'💰'.repeat(extra)} IT`;
     }
-    if (v < 5000000) return 'D🤩 🚀 IT';
-    if (v < 10000000) return 'D🤯 IT';
-    return 'D💎 IT';
+    if (v < 5000000) return 'B🤩y 🚀 IT';
+    if (v < 10000000) return 'B🤯y IT';
+    return 'B💎y IT';
   };
 
   // Handle token selection
@@ -510,27 +511,30 @@ const DOTrade = () => {
         </SuccessBox>
       ) : (
         <>
-          <LeftBox>
-            <Button
-              variant="text"
-              sx={{
-                width: '100%',
-                height: '100%',
-                fontSize: { xs: 12, md: 32 },
-                color: '#e0e0ff',
-                p: 1,
-                fontWeight: 800,
-                letterSpacing: 1,
-                transition: 'all 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.03)',
-                },
-              }}
-              onClick={handleTrade}
-            >
-              {getButtonText()}
-            </Button>
-          </LeftBox>
+          <Magnet padding={50} disabled={false} magnetStrength={10}>
+            <LeftBox>
+              <Button
+                variant="text"
+                sx={{
+                  cursor: 'none',
+                  width: '100%',
+                  height: '100%',
+                  fontSize: { xs: 12, md: 32 },
+                  color: '#e0e0ff',
+                  p: 1,
+                  fontWeight: 800,
+                  letterSpacing: 1,
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                  },
+                }}
+                onClick={handleTrade}
+              >
+                {getButtonText()}
+              </Button>
+            </LeftBox>
+          </Magnet>
 
           <InputBox>
             <TextField
@@ -548,7 +552,7 @@ const DOTrade = () => {
                       onMouseLeave={() => setIsFromHovered(false)}
                       {...fromSwipeHandlers}
                     >
-                      <Tooltip title="Scroll or swipe to switch tokens">
+                      <Tooltip title="Scroll or swipe to switch tokens or click it!">
                         <IconButton
                           ref={fromButtonRef}
                           onClick={() => setModalOpen('from')}
@@ -558,11 +562,11 @@ const DOTrade = () => {
                             <>
                               <Avatar
                                 sx={{
-                                  width: 15,
-                                  height: 15,
+                                  width: 20,
+                                  height: 20,
                                   position: 'absolute',
-                                  top: -5,
-                                  left: -5,
+                                  top: -1.5,
+                                  left: -1.5,
                                   background: 'linear-gradient(135deg, rgba(112, 0, 224, 0.3), rgba(48, 0, 96, 0.3))',
                                   animation: `${previewFade} 0.3s ease-in-out`,
                                   pointerEvents: 'none',
@@ -570,17 +574,17 @@ const DOTrade = () => {
                               >
                                 <Icon
                                   icon={getIconifyName(getPreviewTokens(fromToken).prevToken)}
-                                  width="15"
-                                  height="15"
+                                  width="20"
+                                  height="20"
                                 />
                               </Avatar>
                               <Avatar
                                 sx={{
-                                  width: 15,
-                                  height: 15,
+                                  width: 20,
+                                  height: 20,
                                   position: 'absolute',
-                                  top: -5,
-                                  right: -5,
+                                  top: -1.5,
+                                  right: -1.5,
                                   background: 'linear-gradient(135deg, rgba(112, 0, 224, 0.3), rgba(48, 0, 96, 0.3))',
                                   animation: `${previewFade} 0.3s ease-in-out`,
                                   pointerEvents: 'none',
@@ -588,8 +592,8 @@ const DOTrade = () => {
                               >
                                 <Icon
                                   icon={getIconifyName(getPreviewTokens(fromToken).nextToken)}
-                                  width="15"
-                                  height="15"
+                                  width="20"
+                                  height="20"
                                 />
                               </Avatar>
                             </>
@@ -597,6 +601,7 @@ const DOTrade = () => {
                           <Avatar
                             key={`from-${fromToken.id}`}
                             sx={{
+                              cursor: 'none',
                               width: 40,
                               height: 40,
                               background: 'transparent',
@@ -616,13 +621,15 @@ const DOTrade = () => {
               }}
               sx={{
                 borderRadius: 2,
+                color:'white',
                 input: {
+                  cursor: 'none',
                   color: 'white',
                   fontSize: 35,
                   textAlign: 'left',
                   padding: '2px 10px',
                   fontWeight: 600,
-                },
+                },'& input::placeholder': { color: 'white' },
                 '& fieldset': { border: 'none' },
               }}
             />
@@ -649,7 +656,7 @@ const DOTrade = () => {
                       onMouseLeave={() => setIsToHovered(false)}
                       {...toSwipeHandlers}
                     >
-                      <Tooltip title="Scroll or swipe to switch tokens">
+                      <Tooltip title="Scroll or swipe to switch tokens or click it!">
                         <IconButton
                           ref={toButtonRef}
                           onClick={() => setModalOpen('to')}
@@ -659,11 +666,11 @@ const DOTrade = () => {
                             <>
                               <Avatar
                                 sx={{
-                                  width: 15,
-                                  height: 15,
+                                  width: 20,
+                                  height: 20,
                                   position: 'absolute',
-                                  bottom: -5,
-                                  left: -5,
+                                  bottom: -1.5,
+                                  left: -1.5,
                                   background: 'linear-gradient(135deg, rgba(112, 0, 224, 0.3), rgba(48, 0, 96, 0.3))',
                                   animation: `${previewFade} 0.3s ease-in-out`,
                                   pointerEvents: 'none',
@@ -671,17 +678,17 @@ const DOTrade = () => {
                               >
                                 <Icon
                                   icon={getIconifyName(getPreviewTokens(toToken).prevToken)}
-                                  width="15"
-                                  height="15"
+                                  width="20"
+                                  height="20"
                                 />
                               </Avatar>
                               <Avatar
                                 sx={{
-                                  width: 15,
-                                  height: 15,
+                                  width: 20,
+                                  height: 20,
                                   position: 'absolute',
-                                  bottom: -5,
-                                  right: -5,
+                                  bottom: -1.5,
+                                  right: -1.5,
                                   background: 'linear-gradient(135deg, rgba(112, 0, 224, 0.3), rgba(48, 0, 96, 0.3))',
                                   animation: `${previewFade} 0.3s ease-in-out`,
                                   pointerEvents: 'none',
@@ -689,8 +696,8 @@ const DOTrade = () => {
                               >
                                 <Icon
                                   icon={getIconifyName(getPreviewTokens(toToken).nextToken)}
-                                  width="15"
-                                  height="15"
+                                  width="20"
+                                  height="20"
                                 />
                               </Avatar>
                             </>
@@ -698,6 +705,7 @@ const DOTrade = () => {
                           <Avatar
                             key={`to-${toToken.id}`}
                             sx={{
+                              cursor: 'none',
                               width: 40,
                               height: 40,
                               animation: `${slotSpin} 0.4s ease-in-out`,
@@ -716,8 +724,10 @@ const DOTrade = () => {
                 ),
               }}
               sx={{
+                cursor: 'none',
                 borderRadius: 2,
                 input: {
+                  cursor: 'none',
                   color: 'white',
                   fontSize: 35,
                   textAlign: 'left',
