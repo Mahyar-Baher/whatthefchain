@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-// eslint-disable-next-line no-unused-vars
 import { motion, useSpring } from "framer-motion";
 import { Renderer, Camera, Geometry, Program, Mesh } from "ogl";
 
@@ -68,6 +68,7 @@ export function SmoothCursor({
   springConfig = { damping: 45, stiffness: 400, mass: 1, restDelta: 0.001 },
 }) {
   const [isHidden, setIsHidden] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.matchMedia("(min-width: 1024px)").matches);
   const lastMousePos = useRef({ x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const lastUpdateTime = useRef(Date.now());
@@ -80,6 +81,16 @@ export function SmoothCursor({
   const scale = useSpring(1, { ...springConfig, stiffness: 500, damping: 35 });
 
   useEffect(() => {
+    // بررسی تغییرات اندازه صفحه برای تشخیص دسکتاپ
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const handleMediaChange = (e) => {
+      setIsDesktop(e.matches);
+      document.body.style.cursor = e.matches ? "none" : "auto";
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+    handleMediaChange(mediaQuery); // بررسی اولیه
+
     const updateVelocity = (currentPos) => {
       const currentTime = Date.now();
       const deltaTime = currentTime - lastUpdateTime.current;
@@ -95,33 +106,30 @@ export function SmoothCursor({
       lastMousePos.current = currentPos;
     };
 
-    // Detect if cursor is over a modal or interactive element
     const shouldHideCursor = (target) => {
-      // Check if target is a modal or inside a modal
       const modalElements = document.querySelectorAll('.MuiModal-root, .MuiDialog-root, [role="dialog"]');
-      
       for (const modal of modalElements) {
         if (modal.contains(target)) {
           return true;
         }
       }
-      
       return false;
     };
 
     const smoothMouseMove = (e) => {
+      if (!isDesktop) return; // فقط در دسکتاپ اجرا شود
+
       const currentPos = { x: e.clientX, y: e.clientY };
       updateVelocity(currentPos);
-      
-      // Check if cursor should be hidden
+
       const hide = shouldHideCursor(e.target);
       setIsHidden(hide);
-      
+
       if (hide) {
-        document.body.style.cursor = 'auto';
+        document.body.style.cursor = "auto";
         return;
       } else {
-        document.body.style.cursor = 'none';
+        document.body.style.cursor = "none";
       }
 
       const speed = Math.sqrt(velocity.current.x ** 2 + velocity.current.y ** 2);
@@ -158,15 +166,20 @@ export function SmoothCursor({
       });
     };
 
-    document.body.style.cursor = "none";
-    window.addEventListener("mousemove", throttledMouseMove);
+    if (isDesktop) {
+      document.body.style.cursor = "none";
+      window.addEventListener("mousemove", throttledMouseMove);
+    }
 
     return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("mousemove", throttledMouseMove);
       document.body.style.cursor = "auto";
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [cursorX, cursorY, rotation, scale]);
+  }, [cursorX, cursorY, rotation, scale, isDesktop, cursor]);
+
+  if (!isDesktop) return null; // در تبلت و موبایل رندر نشود
 
   return (
     <motion.div
@@ -181,7 +194,7 @@ export function SmoothCursor({
         pointerEvents: "none",
         willChange: "transform",
         zIndex: 9999,
-        display: isHidden ? 'none' : 'block'
+        display: isHidden ? "none" : "block",
       }}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
@@ -284,8 +297,7 @@ const BackgroundWithCursor = ({
     const gl = renderer.gl;
     const canvas = gl.canvas;
     canvasRef.current = canvas;
-    
-    // Canvas styling
+
     canvas.style.position = "fixed";
     canvas.style.top = "0";
     canvas.style.left = "0";
@@ -295,34 +307,30 @@ const BackgroundWithCursor = ({
     document.body.appendChild(canvas);
     gl.clearColor(0, 0, 0, 0);
 
-    // Camera setup
     const camera = new Camera(gl, { fov: 15 });
     camera.position.set(0, 0, cameraDistance);
 
-    // Resize handler
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       renderer.setSize(window.innerWidth, window.innerHeight);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
-    
+
     window.addEventListener("resize", resize);
     resize();
 
-    // Mouse position tracker
     const mousePos = { x: 0, y: 0 };
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       mousePos.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       mousePos.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
     };
-    
+
     if (moveParticlesOnHover) {
       document.addEventListener("mousemove", handleMouseMove);
     }
 
-    // Particle data initialization
     const count = particleCount;
     const positions = new Float32Array(count * 3);
     const randoms = new Float32Array(count * 4);
@@ -330,31 +338,22 @@ const BackgroundWithCursor = ({
     const palette = particleColors?.length ? particleColors : defaultColors;
 
     for (let i = 0; i < count; i++) {
-      // Position with spherical distribution
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = Math.cbrt(Math.random());
-      
+
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.sin(phi) * Math.sin(theta);
       const z = r * Math.cos(phi);
-      
+
       positions.set([x, y, z], i * 3);
-      
-      // Random values
-      randoms.set([
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random()
-      ], i * 4);
-      
-      // Color
+
+      randoms.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
+
       const color = hexToRgb(palette[Math.floor(Math.random() * palette.length)]);
       colors.set(color, i * 3);
     }
 
-    // Geometry and program setup
     const geometry = new Geometry(gl, {
       position: { size: 3, data: positions },
       random: { size: 4, data: randoms },
@@ -377,41 +376,36 @@ const BackgroundWithCursor = ({
 
     const particles = new Mesh(gl, { mode: gl.POINTS, geometry, program });
 
-    // Animation loop
     let animationFrame;
     let lastTime = 0;
     let elapsed = 0;
-    
+
     const animate = (time) => {
       animationFrame = requestAnimationFrame(animate);
-      
+
       if (!lastTime) lastTime = time;
       const delta = time - lastTime;
       lastTime = time;
       elapsed += delta * speed;
-      
-      // Update uniforms
+
       program.uniforms.uTime.value = elapsed * 0.001;
-      
-      // Move particles with mouse
+
       if (moveParticlesOnHover) {
         particles.position.x = -mousePos.x * particleHoverFactor;
         particles.position.y = -mousePos.y * particleHoverFactor;
       }
-      
-      // Rotate particles
+
       if (!disableRotation) {
         particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.1;
         particles.rotation.y = Math.cos(elapsed * 0.0005) * 0.15;
         particles.rotation.z += 0.01 * speed;
       }
-      
+
       renderer.render({ scene: particles, camera });
     };
-    
+
     animationFrame = requestAnimationFrame(animate);
 
-    // Cleanup
     return () => {
       window.removeEventListener("resize", resize);
       if (moveParticlesOnHover) {
@@ -440,12 +434,12 @@ const BackgroundWithCursor = ({
     <div
       ref={containerRef}
       className={`particles-container ${className || ''}`}
-      style={{ 
-        position: "relative", 
-        width: "100%", 
+      style={{
+        position: "relative",
+        width: "100%",
         height: "100vh",
         overflow: "hidden",
-        zIndex: 0
+        zIndex: 0,
       }}
     >
       {children}

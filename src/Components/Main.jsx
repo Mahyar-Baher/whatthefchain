@@ -26,11 +26,14 @@ const Main = () => {
             <Grid size={{xs:12}}>
                 <BellAlert/>
             </Grid>
-            <Grid size={{xs:12,sm:6,md:6,lg:5}}>
+            <Grid size={{xs:12,sm:6,md:6,lg:5}} display={{xs:'none',md:'block'}}>
                 <SarcasticText/>
             </Grid>
             <Grid size={{xs:12,sm:6,md:6,lg:5}}>
                 <DOTrade/>
+            </Grid>
+            <Grid size={{xs:12,sm:6,md:6,lg:5}} display={{xs:'block',md:'none'}}>
+                <SarcasticText/>
             </Grid>
             <Grid size={{xs:12,md: 5}} display={{xs:'flex',md:'none'}}>
                 <BitcoinPriceComparison/>
@@ -46,7 +49,7 @@ const Main = () => {
         closeAfterTransition
         disableEscapeKeyDown
         sx={{
-          display: 'flex',
+          display: {xs: 'nonezz',md:'flex'},
           alignItems: 'center',
           justifyContent: 'center',
         }}

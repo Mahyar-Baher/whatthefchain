@@ -311,7 +311,7 @@ const DOTrade = () => {
     if (v < 300000) return 'B🧨💸 IT';
     if (v < 1000000) {
       const extra = Math.min(6, Math.floor(v / 100000));
-      return `D🤣 ${'💰'.repeat(extra)} IT`;
+      return `B🤣y ${''.repeat(extra)} IT`;
     }
     if (v < 5000000) return 'B🤩y 🚀 IT';
     if (v < 10000000) return 'B🤯y IT';
@@ -475,7 +475,7 @@ const DOTrade = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height={350}
+      height={{xs: 180,md: 350}}
       gap={0}
       pr={{xs:3, md:5}}
       pl={{xs:3,md:0}}
@@ -822,7 +822,7 @@ class DOTradeErrorBoundary extends React.Component {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height={350}
+          height={{xs: 180,md: 350}}
           sx={{ color: 'white', textAlign: 'center' }}
         >
           <Typography variant="h6">
