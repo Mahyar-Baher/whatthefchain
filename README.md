@@ -104,3 +104,4 @@ Thanks to Vite, React, MUI, and Ethers.js for powering this project.
 
 
 Whatthefchain - Where crypto meets style. Connect your wallet and join the chain! 🍕💸
+need to be better
