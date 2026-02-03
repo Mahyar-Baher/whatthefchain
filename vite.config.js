@@ -24,7 +24,7 @@ export default defineConfig({
       ]
     }),
   ],
-  // base: '/whatthefchain/',
+  base: '/whatthefchain/',
   resolve: {
     alias: {
       '@': '/src'
